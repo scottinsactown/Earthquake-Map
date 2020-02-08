@@ -8,9 +8,7 @@ d3.json(url,function(data) {
 })
 
 function createFeatures(earthquakeData) {
-  // Function to add circles to map
-
-console.log(earthquakeData.length)
+  // Add circles to map and bind popups
 let markers = [];
 for (let index = 0; index < earthquakeData.length; index++) {
   let earthquake = earthquakeData[index];
@@ -55,7 +53,6 @@ for (let index = 0; index < earthquakeData.length; index++) {
     createMap(L.layerGroup(markers));
 }
 
-
 function createMap(earthquakes) {
 
     let lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token={accessToken}", {
@@ -92,7 +89,25 @@ function createMap(earthquakes) {
     collapsed: true
   }).addTo(myMap);
 
-}
+ // Set up the legend (requires CSS for legend)
+  var legend = L.control({ position: "bottomleft" });
+  legend.onAdd = function() {
+    var div = L.DomUtil.create("div", "info legend");
+        div.innerHTML += "<h4>Earthquakes<br>Last 7 Days</h4>";
+        div.innerHTML += "<h5>Magnitude</h5>";
+        div.innerHTML += '<i style="background: greenyellow"></i><span><1</span><br>';
+        div.innerHTML += '<i style="background: yellowgreen"></i><span>1-2</span><br>';
+        div.innerHTML += '<i style="background: yellow"></i><span>2-3</span><br>';
+        div.innerHTML += '<i style="background: gold"></i><span>3-4</span><br>';
+        div.innerHTML += '<i style="background: orange"></i><span>4-5</span><br>';
+        div.innerHTML += '<i style="background: red"></i><span>>5</span><br>';
+
+    return div;
+  };
+
+  // Adding legend to the map
+  legend.addTo(myMap);
+  }
 
 function quakeColor(mag) {
   return mag > 5 ? "red":
@@ -104,34 +119,5 @@ function quakeColor(mag) {
 }
 
 function circleSize(mag) {
-  return mag *1000;
+  return mag * 25000;
 }
-
-
-  // // Set up the legend
-  // var legend = L.control({ position: "bottomright" });
-  // legend.onAdd = function() {
-  //   var div = L.DomUtil.create("div", "info legend");
-  //   var limits = geojson.options.limits;
-  //   var colors = geojson.options.colors;
-  //   var labels = [];
-
-  //   // Add min & max
-  //   var legendInfo = "<h1>Median Income</h1>" +
-  //     "<div class=\"labels\">" + //escape clause allow "" within ""
-  //       "<div class=\"min\">" + limits[0] + "</div>" +
-  //       "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-  //     "</div>";
-
-  //   div.innerHTML = legendInfo;
-
-  //   limits.forEach(function(limit, index) {
-  //     labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-  //   });
-
-  //   div.innerHTML += "<ul>" + labels.join("") + "</ul>";
-  //   return div;
-  // };
-
-  // // Adding legend to the map
-  // legend.addTo(myMap);
